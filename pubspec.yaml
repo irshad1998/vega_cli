@@ -1,0 +1,27 @@
+name: vega_cli
+version: 0.0.1-dev
+homepage: https://github.com/irshad1998/vega_cli
+description: Command-Line Interface for Dart to generate flutter and dart projects.
+repository: https://github.com/irshad1998/vega_cli
+environment: 
+  sdk: '>=2.18.6 <3.0.0'
+
+dependencies: 
+  args: ^2.3.1
+  dcli: ^2.0.1
+  recase: ^4.1.0
+  http: '>=0.13.4 <2.0.0'
+  ansicolor: ^2.0.1
+  process_run: '>=0.12.2 <1.0.0'
+  yaml: '>=3.1.0 <4.0.0'
+  pubspec: '>=2.0.1 <3.0.0'
+  version: '>=2.0.0 <4.0.0'
+  dart_style: '>=2.0.1 <3.0.0'
+  path: '>=1.8.0 <2.0.0'
+  mason_logger: ^0.2.5
+
+dev_dependencies: 
+
+executables: 
+  vega: 
+
