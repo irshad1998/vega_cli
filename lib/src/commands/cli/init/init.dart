@@ -26,16 +26,21 @@ class InitCommand extends Command {
 
   @override
   Future<void> execute() async {
-    final menu = Menu(
-      [
-        cyan('Provider'),
-        'Bloc',
-      ],
-      title: cyan('Select state management'),
-    );
-    final result = menu.choose();
-
-    result.index == 0 ? await createProviderProject() : await initBloc();
+    if (containsArg('--provider')) {
+      await createProviderProject();
+    } else if (containsArg('--bloc')) {
+      await initBloc();
+    } else {
+      final menu = Menu(
+        [
+          cyan('Provider'),
+          'Bloc',
+        ],
+        title: cyan('Select state management'),
+      );
+      final result = menu.choose();
+      result.index == 0 ? await createProviderProject() : await initBloc();
+    }
 
     return;
   }
