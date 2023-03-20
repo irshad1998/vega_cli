@@ -26,8 +26,7 @@ class ShellUtils {
 
     try {
       await run(
-          'flutter create --no-pub -i $iosLang -a $androidLang --org $org'
-          ' $path',
+          'flutter create --no-pub -i $iosLang -a $androidLang --org $org  $path',
           verbose: false);
       flutterCreateProgress.complete();
     } catch (e) {

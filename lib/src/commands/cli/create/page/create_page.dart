@@ -7,6 +7,7 @@ import 'package:vega_cli/src/common/menu.dart';
 import 'package:vega_cli/src/core/structure.dart';
 import 'package:vega_cli/src/core/vega_gen.dart';
 import 'package:vega_cli/src/functions/create/create_single_file.dart';
+import 'package:vega_cli/src/functions/write/add_multi_provider.dart';
 import 'package:vega_cli/src/functions/write/add_route.dart';
 import 'package:vega_cli/src/template/provider/provider.dart';
 import 'package:vega_cli/src/template/provider/view.dart';
@@ -96,6 +97,7 @@ class CreatePageCommand extends Command {
     if (name != 'home') {
       addAppPages(name);
       addAppRoutes(name);
+      addProvider(name);
     }
   }
 
