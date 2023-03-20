@@ -1,5 +1,7 @@
+import 'dart:io';
+
 import 'package:dcli/dcli.dart' hide run;
-import 'package:mason_logger/mason_logger.dart' hide cyan;
+import 'package:mason_logger/mason_logger.dart' hide cyan, red;
 import 'package:process_run/shell_run.dart';
 
 class ShellUtils {
@@ -28,6 +30,7 @@ class ShellUtils {
       await run(
           'flutter create --no-pub -i $iosLang -a $androidLang --org $org  $path',
           verbose: false);
+
       flutterCreateProgress.complete();
     } catch (e) {
       flutterCreateProgress.fail();

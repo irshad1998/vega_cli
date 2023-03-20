@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:mason_logger/mason_logger.dart';
+import 'package:mason_logger/mason_logger.dart' hide yellow;
 import 'package:recase/recase.dart';
 import 'package:vega_cli/src/commands/cli/init/init.dart';
 import 'package:vega_cli/src/commands/interfaces/command_interface.dart';
@@ -35,11 +35,20 @@ class CreateProjectCommand extends Command {
 
     var path = Structure.replaceAsExpected(
         path: Directory.current.path + p.separator + nameProject.snakeCase);
+    if (path.contains(' ')) {
+      print(yellow(
+          '''[WARNING] : Current path should not contain white spaces. path => "${Directory.current.path}"
+            Exit.'''));
+      return;
+    }
     await Directory(path).create(recursive: true);
 
     Directory.current = path;
 
-    var org = 'com.$nameProject}';
+    var org = Logger().prompt(
+      'Your organization name',
+      defaultValue: 'com.${name.snakeCase}',
+    );
 
     var iosLanguage = 'swift';
 
