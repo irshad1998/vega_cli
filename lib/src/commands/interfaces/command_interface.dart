@@ -4,7 +4,7 @@ import 'package:vega_cli/src/exceptions/exception.dart';
 import 'package:vega_cli/src/utils/log/logger.dart';
 
 abstract class Command with ArgsMixin {
-  Command() {
+  Command({String? package}) {
     while (
         ((args.contains(commandName) || args.contains('$commandName:$name'))) &&
             args.isNotEmpty) {

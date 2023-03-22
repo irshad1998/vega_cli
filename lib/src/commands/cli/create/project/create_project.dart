@@ -38,7 +38,7 @@ class CreateProjectCommand extends Command {
     if (path.contains(' ')) {
       print(yellow(
           '''[WARNING] : Current path should not contain white spaces. path => "${Directory.current.path}"
-            Exit.'''));
+            Exit'''));
       return;
     }
     await Directory(path).create(recursive: true);

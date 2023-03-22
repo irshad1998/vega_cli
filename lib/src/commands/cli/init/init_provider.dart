@@ -84,7 +84,7 @@ Future<void> createProviderProject() async {
       Logger().progress(cyan('Generating module home ..'));
   try {
     /// create page
-    await Future.wait([CreatePageCommand().execute()]);
+    await Future.wait([CreatePageCommand(package: 'provider').execute()]);
     pageCreationProgress.complete();
   } catch (_) {
     pageCreationProgress.fail();

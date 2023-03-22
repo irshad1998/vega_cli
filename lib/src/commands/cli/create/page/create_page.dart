@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:dcli/dcli.dart';
+import 'package:mason_logger/mason_logger.dart';
 import 'package:recase/recase.dart';
+import 'package:vega_cli/src/commands/cli/create/project/create_project.dart';
 import 'package:vega_cli/src/commands/interfaces/command_interface.dart';
 import 'package:vega_cli/src/common/menu.dart';
 import 'package:vega_cli/src/core/structure.dart';
@@ -9,11 +11,19 @@ import 'package:vega_cli/src/core/vega_gen.dart';
 import 'package:vega_cli/src/functions/create/create_single_file.dart';
 import 'package:vega_cli/src/functions/write/add_multi_provider.dart';
 import 'package:vega_cli/src/functions/write/add_route.dart';
+import 'package:vega_cli/src/template/bloc/bloc.dart';
+import 'package:vega_cli/src/template/bloc/event.dart';
+import 'package:vega_cli/src/template/bloc/state.dart';
 import 'package:vega_cli/src/template/provider/provider.dart';
 import 'package:vega_cli/src/template/provider/view.dart';
 import 'package:vega_cli/src/utils/pubspec/pubspec_utils.dart';
+import 'package:vega_cli/src/utils/shell/shell_utils.dart';
 
 class CreatePageCommand extends Command {
+  String? package;
+
+  CreatePageCommand({this.package});
+
   @override
   String get commandName => 'page';
 
@@ -22,6 +32,9 @@ class CreatePageCommand extends Command {
 
   @override
   String? get hint => 'Create new page in lib/app/modules';
+
+  @override
+  List<String> get acceptedFlags => ['--provider', '--bloc'];
 
   @override
   Future<void> execute() async {
@@ -55,19 +68,96 @@ class CreatePageCommand extends Command {
       );
       final result = menu.choose();
       if (result.index == 0) {
-        _writeFiles(path, name!, overwrite: true);
+        if (containsArg('--bloc')) {
+          _writeBlocPageFile(path, name!, overwrite: true);
+        } else if (containsArg('--provider')) {
+          _writeProviderPageFiles(path, name!, overwrite: true);
+        } else {
+          if (package == 'provider' && name == 'home') {
+            _writeProviderPageFiles(path, name!, overwrite: true);
+          } else if (package == 'bloc' && name == 'home') {
+            _writeBlocPageFile(path, name!, overwrite: true);
+          }
+        }
       } else if (result.index == 2) {
         var name = ask('what new name for the page?');
         checkForAlreadyExists(name.trim().snakeCase);
       }
     } else {
       Directory(path).createSync(recursive: true);
-      _writeFiles(path, name!, overwrite: false);
+      if (containsArg('--bloc')) {
+        _writeBlocPageFile(path, name!, overwrite: false);
+      } else if (containsArg('--provider')) {
+        _writeProviderPageFiles(path, name!, overwrite: false);
+      } else {
+        if (package == 'provider' && name == 'home') {
+          _writeProviderPageFiles(path, name!, overwrite: false);
+        } else if (package == 'bloc' && name == 'home') {
+          _writeBlocPageFile(path, name!, overwrite: false);
+        }
+      }
+    }
+  }
+
+  void _writeBlocPageFile(String path, String name,
+      {bool overwrite = false}) async {
+    var extraFolder = PubspecUtils.extraFolder ?? true;
+
+    /// view file
+    var viewFile = handleFileCreate(
+      name,
+      'view',
+      path,
+      extraFolder,
+      ProviderViewTemplate(
+        '',
+        '${name.pascalCase}View',
+        overwrite: overwrite,
+      ),
+      'views',
+    );
+
+    var blocFile = handleFileCreate(
+      name,
+      'bloc',
+      path,
+      extraFolder,
+      BlocTemplate(name),
+      'bloc',
+    );
+
+    var eventFile = handleFileCreate(
+      name,
+      'event',
+      path,
+      extraFolder,
+      BlocEventTemplate(name),
+      'bloc',
+    );
+
+    var stateFile = handleFileCreate(
+      name,
+      'state',
+      path,
+      extraFolder,
+      BlocStateTemplate(name),
+      'bloc',
+    );
+
+    if (name != 'home') {
+      var buildRunnerProgress = Logger().progress('Running build runner ..');
+      try {
+        await ShellUtils.runBuildRunner();
+        buildRunnerProgress.complete();
+      } catch (e) {
+        buildRunnerProgress.fail();
+      }
     }
   }
 
   /// WRITE NEW FILES
-  void _writeFiles(String path, String name, {bool overwrite = false}) {
+  void _writeProviderPageFiles(String path, String name,
+      {bool overwrite = false}) {
     var extraFolder = PubspecUtils.extraFolder ?? true;
     var providerFile = handleFileCreate(
       name,
@@ -102,7 +192,7 @@ class CreatePageCommand extends Command {
   }
 
   @override
-  String get codeSample => 'get create page:product';
+  String get codeSample => 'vega create page product [flags]';
 
   @override
   int get maxParameters => 0;

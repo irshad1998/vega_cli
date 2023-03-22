@@ -15,6 +15,10 @@ class ShellUtils {
         verbose: true);
   }
 
+  static Future<void> runBuildRunner() async {
+    await run('flutter packages pub run build_runner build', verbose: false);
+  }
+
   static Future<void> flutterCreate(
     String path,
     String? org,
