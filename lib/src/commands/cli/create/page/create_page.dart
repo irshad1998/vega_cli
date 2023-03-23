@@ -3,12 +3,12 @@ import 'dart:io';
 import 'package:dcli/dcli.dart';
 import 'package:mason_logger/mason_logger.dart';
 import 'package:recase/recase.dart';
-import 'package:vega_cli/src/commands/cli/create/project/create_project.dart';
 import 'package:vega_cli/src/commands/interfaces/command_interface.dart';
 import 'package:vega_cli/src/common/menu.dart';
 import 'package:vega_cli/src/core/structure.dart';
 import 'package:vega_cli/src/core/vega_gen.dart';
 import 'package:vega_cli/src/functions/create/create_single_file.dart';
+import 'package:vega_cli/src/functions/write/add_multi_bloc.dart';
 import 'package:vega_cli/src/functions/write/add_multi_provider.dart';
 import 'package:vega_cli/src/functions/write/add_route.dart';
 import 'package:vega_cli/src/template/bloc/bloc.dart';
@@ -143,6 +143,12 @@ class CreatePageCommand extends Command {
       BlocStateTemplate(name),
       'bloc',
     );
+
+    if (name != 'home') {
+      addAppPages(name);
+      addAppRoutes(name);
+      addBloc(name);
+    }
 
     if (name != 'home') {
       var buildRunnerProgress = Logger().progress('Running build runner ..');

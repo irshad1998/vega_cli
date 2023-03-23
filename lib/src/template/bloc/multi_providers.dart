@@ -9,6 +9,7 @@ class BlocMultiBlocProviderListTemplate extends Template {
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:${PubspecUtils.projectName}/app/core/di/injectable.dart';
 
 import 'package:${PubspecUtils.projectName}/app/modules/home/bloc/home_bloc.dart';
 
@@ -26,7 +27,7 @@ import 'package:${PubspecUtils.projectName}/app/modules/home/bloc/home_bloc.dart
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => HomeBloc(),
+          create: (context) => getIt<HomeBloc>(),
         ),
       ],
       child: child,

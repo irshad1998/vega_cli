@@ -5,6 +5,7 @@ import 'package:mason_logger/mason_logger.dart' hide cyan;
 import 'package:vega_cli/src/commands/cli/create/page/create_page.dart';
 import 'package:vega_cli/src/core/structure.dart';
 import 'package:vega_cli/src/functions/create/create_list_dir.dart';
+import 'package:vega_cli/src/functions/write/write_flavor.dart';
 import 'package:vega_cli/src/template/bloc/constants.dart';
 import 'package:vega_cli/src/template/bloc/exceptions.dart';
 import 'package:vega_cli/src/template/bloc/injectable.dart';
@@ -22,6 +23,8 @@ import 'package:vega_cli/src/template/provider/main_production.dart';
 import 'package:vega_cli/src/template/provider/main_staging.dart';
 import 'package:vega_cli/src/utils/pubspec/pubspec_utils.dart';
 import 'package:vega_cli/src/utils/shell/shell_utils.dart';
+
+import '../../../template/provider/launch_json.dart';
 
 Future<void> initBloc() async {
   var initialDirs = [
@@ -109,6 +112,8 @@ Future<void> initBloc() async {
     createTemplateProgress.fail();
     return;
   }
+  File('assets/docs/launch.json').writeAsStringSync(launchJsonData);
+  writeAndroidFlavor();
 
   var pageCreationProgress =
       Logger().progress(cyan('Generating module home ..'));
